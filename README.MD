@@ -42,7 +42,6 @@
 6. **Caveats and Limitations**
    - Error Handling: The current implementation has basic error handling. It could be improved by adding more specific exception handling and custom error responses.
    - Scalability: The application is designed for simplicity and may require additional optimizations and configurations to handle high traffic and large datasets.
-   - Security: While basic security measures are in1 place, such as password encoding and JWT authentication, further enhancements could be made to ensure robust security, including input validation, rate limiting, and more comprehensive logging and monitoring.
    - Logging: The project uses basic logging configurations. For production use, it is recommended to enhance logging with structured logs, log rotation, and log aggregation.
    - API Documentation: The project does not include API documentation. It is recommended to add Swagger or other API documentation tools to provide detailed information about the endpoints and request/response formats.
 
@@ -50,7 +49,11 @@
    - **Create a new user:**
      ```sh
      curl --request POST --url http://localhost:8080/api/auth/register --header 'Content-Type: application/json' --data '{ "name": "John Doe", "email": "john@example.com", "password": "password123" }'     
-   
+    
+   - **Get a specific user profile**
+        ```sh
+        curl --request GET --url http://localhost:8080/api/users/1 --header 'Authorization token_here' --header 'Content-Type: application/json'
+
    - **Login / get token:**  
      ```sh
      curl --request POST --url http://localhost:8080/api/auth/login --header 'Content-Type: application/json' --data '{ "email": "john@example.com", "password": "password123" }'
