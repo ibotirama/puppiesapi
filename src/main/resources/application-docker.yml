@@ -1,0 +1,23 @@
+# src/main/resources/application-docker.yml
+spring:
+    datasource:
+        url: jdbc:postgresql://db:5432/puppies
+        username: puppies
+        password: puppies
+        driver-class-name: org.postgresql.Driver
+    jpa:
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+                format_sql: true
+        show-sql: true
+
+server:
+    port: 8080
+
+logging:
+    level:
+        org.springframework: INFO
+        com.puppies: DEBUG
