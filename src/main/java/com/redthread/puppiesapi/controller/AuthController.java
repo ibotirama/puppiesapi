@@ -5,6 +5,7 @@ import com.redthread.puppiesapi.dto.LoginResponse;
 import com.redthread.puppiesapi.dto.UserDTO;
 import com.redthread.puppiesapi.model.User;
 import com.redthread.puppiesapi.service.AuthService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,12 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
-
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody UserDTO userDTO) {

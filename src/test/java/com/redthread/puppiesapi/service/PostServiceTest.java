@@ -107,4 +107,24 @@ class PostServiceTest {
 
         assertEquals(posts, feed);
     }
+
+    @Test
+    void shouldGetPostsLikedByASpecificUser() {
+        List<Post> posts = List.of(new Post(), new Post());
+        when(postRepository.findAllByUserIdThatHasLike(1L)).thenReturn(posts);
+
+        List<Post> feed = postService.getFeed(1L, PageRequest.of(0, 10));
+
+        assertEquals(posts, feed);
+    }
+
+    @Test
+    void shouldGetASpecificPost() {
+        Post post1 = new Post();
+        when(postRepository.findById(1L)).thenReturn(Optional.of(post1));
+
+        Optional<Post> post = postService.getPost(1L);
+
+        assertEquals(post1, post.get());
+    }
 }

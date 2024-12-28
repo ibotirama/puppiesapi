@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -31,8 +32,14 @@ public class PostController {
     }
 
     @GetMapping("/feed")
-    public ResponseEntity<List<Post>> getFeed(Pageable pageable) {
-        List<Post> feed = postService.getFeed(pageable);
+    public ResponseEntity<List<Post>> getFeed(@RequestParam(required = false) Long likedByUserId, Pageable pageable) {
+        List<Post> feed = postService.getFeed(likedByUserId, pageable);
         return ResponseEntity.ok(feed);
+    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<Post> getFeedByUser(@PathVariable Long postId) {
+        Optional<Post> feed = postService.getPost(postId);
+        return feed.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

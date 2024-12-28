@@ -7,12 +7,12 @@ import com.redthread.puppiesapi.model.User;
 import com.redthread.puppiesapi.repository.LikeRepository;
 import com.redthread.puppiesapi.repository.PostRepository;
 import lombok.AllArgsConstructor;
-import org.hibernate.FetchNotFoundException;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -43,6 +43,17 @@ public class PostService {
     }
 
     public List<Post> getFeed(Pageable pageable) {
+        return getFeed(null, pageable);
+    }
+
+    public List<Post> getFeed(Long likedByUserId, Pageable pageable) {
+        if (likedByUserId != null) {
+            return postRepository.findAllByUserIdThatHasLike(likedByUserId);
+        }
         return postRepository.findAllByOrderByCreatedAtDesc(pageable);
+    }
+
+    public Optional<Post> getPost(Long postId) {
+        return postRepository.findById(postId);
     }
 }
