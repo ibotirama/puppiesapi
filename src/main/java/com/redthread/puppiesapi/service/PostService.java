@@ -43,14 +43,17 @@ public class PostService {
     }
 
     public List<Post> getFeed(Pageable pageable) {
-        return getFeed(null, pageable);
+        return getFeed(null, null, pageable);
     }
 
-    public List<Post> getFeed(Long likedByUserId, Pageable pageable) {
-        if (likedByUserId != null) {
-            return postRepository.findAllByUserIdThatHasLike(likedByUserId);
+    public List<Post> getFeed(Long userId, Boolean liked, Pageable pageable) {
+        if (userId != null && Boolean.TRUE.equals(liked)) {
+            return postRepository.findAllByUserIdAndLikesNotEmptyOrderByCreatedAtDesc(userId, pageable);
+        } else if (userId != null) {
+            return postRepository.findAllByUserIdOrderByCreatedAtDesc(userId, pageable);
+        } else {
+            return postRepository.findAllByOrderByCreatedAtDesc(pageable);
         }
-        return postRepository.findAllByOrderByCreatedAtDesc(pageable);
     }
 
     public Optional<Post> getPost(Long postId) {

@@ -109,11 +109,25 @@ class PostServiceTest {
     }
 
     @Test
+    void shouldGetPostsFromASpecificUser() {
+        List<Post> posts = List.of(new Post(), new Post());
+        Pageable pageable = PageRequest.of(0, 10); // Page 0, size 10
+        Page<Post> page = new PageImpl<>(posts, pageable, posts.size());
+        when(postRepository.findAllByUserIdOrderByCreatedAtDesc(1L, pageable)).thenReturn(page.getContent());
+
+        List<Post> feed = postService.getFeed(1L, null, PageRequest.of(0, 10));
+
+        assertEquals(posts, feed);
+    }
+
+    @Test
     void shouldGetPostsLikedByASpecificUser() {
         List<Post> posts = List.of(new Post(), new Post());
-        when(postRepository.findAllByUserIdThatHasLike(1L)).thenReturn(posts);
+        Pageable pageable = PageRequest.of(0, 10); // Page 0, size 10
+        Page<Post> page = new PageImpl<>(posts, pageable, posts.size());
+        when(postRepository.findAllByUserIdAndLikesNotEmptyOrderByCreatedAtDesc(1L, pageable)).thenReturn(page.getContent());
 
-        List<Post> feed = postService.getFeed(1L, PageRequest.of(0, 10));
+        List<Post> feed = postService.getFeed(1L, true, PageRequest.of(0, 10));
 
         assertEquals(posts, feed);
     }

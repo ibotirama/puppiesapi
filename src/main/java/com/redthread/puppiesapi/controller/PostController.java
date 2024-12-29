@@ -32,13 +32,13 @@ public class PostController {
     }
 
     @GetMapping("/feed")
-    public ResponseEntity<List<Post>> getFeed(@RequestParam(required = false) Long likedByUserId, Pageable pageable) {
-        List<Post> feed = postService.getFeed(likedByUserId, pageable);
+    public ResponseEntity<List<Post>> getFeed(@RequestParam(required = false) Long userId, @RequestParam(required = false) Boolean liked, Pageable pageable) {
+        List<Post> feed = postService.getFeed(userId, liked, pageable);
         return ResponseEntity.ok(feed);
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<Post> getFeedByUser(@PathVariable Long postId) {
+    public ResponseEntity<Post> getPostById(@PathVariable Long postId) {
         Optional<Post> feed = postService.getPost(postId);
         return feed.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }

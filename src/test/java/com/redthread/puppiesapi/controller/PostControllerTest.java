@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -75,9 +76,32 @@ class PostControllerTest {
         List<Post> posts = List.of(new Post(), new Post());
         Pageable pageable = PageRequest.of(0, 10); // Page 0, size 10
         Page<Post> page = new PageImpl<>(posts, pageable, posts.size());
-        when(postService.getFeed(null, pageable)).thenReturn(page.getContent());
+        when(postService.getFeed(null, null, pageable)).thenReturn(page.getContent());
 
-        ResponseEntity<List<Post>> response = postController.getFeed(null, pageable);
+        ResponseEntity<List<Post>> response = postController.getFeed(null, null, pageable);
+
+        assertEquals(ResponseEntity.ok(posts), response);
+    }
+
+    @Test
+    void shouldGetPostById() {
+        Post post1 = new Post();
+        when(postService.getPost(1L)).thenReturn(Optional.of(post1));
+
+        ResponseEntity<Post> response = postController.getPostById(1L);
+
+        assertEquals(ResponseEntity.ok(post1), response);
+    }
+
+    @Test
+    void shouldGetFeedOfASpecificUser() {
+        Post post1 = buildAMockPostWithALike();
+        List<Post> posts = List.of(post1);
+        Pageable pageable = PageRequest.of(0, 10); // Page 0, size 10
+        Page<Post> page = new PageImpl<>(posts, pageable, posts.size());
+        when(postService.getFeed(1L, null, pageable)).thenReturn(page.getContent());
+
+        ResponseEntity<List<Post>> response = postController.getFeed(1L, null, pageable);
 
         assertEquals(ResponseEntity.ok(posts), response);
     }
@@ -88,9 +112,9 @@ class PostControllerTest {
         List<Post> posts = List.of(post1);
         Pageable pageable = PageRequest.of(0, 10); // Page 0, size 10
         Page<Post> page = new PageImpl<>(posts, pageable, posts.size());
-        when(postService.getFeed(1L, pageable)).thenReturn(page.getContent());
+        when(postService.getFeed(1L, true, pageable)).thenReturn(page.getContent());
 
-        ResponseEntity<List<Post>> response = postController.getFeed(1L, pageable);
+        ResponseEntity<List<Post>> response = postController.getFeed(1L, true, pageable);
 
         assertEquals(ResponseEntity.ok(posts), response);
     }

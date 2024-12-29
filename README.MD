@@ -43,7 +43,9 @@
    - Error Handling: The current implementation has basic error handling. It could be improved by adding more specific exception handling and custom error responses.
    - Scalability: The application is designed for simplicity and may require additional optimizations and configurations to handle high traffic and large datasets.
    - Logging: The project uses basic logging configurations. For production use, it is recommended to enhance logging with structured logs, log rotation, and log aggregation.
+   - Security: The project includes basic JWT-based authentication. For production use, additional security measures such as HTTPS, CSRF protection, and input validation should be implemented. Some endpoints may execute things using user id as parameter, but it could be just using the logged user as well.
    - API Documentation: The project does not include API documentation. It is recommended to add Swagger or other API documentation tools to provide detailed information about the endpoints and request/response formats.
+   - Tests: The project includes unit tests for the core functionalities. It is recommended to add integration tests, end-to-end tests, and performance tests to ensure the application works as expected in different scenarios.     
 
 7. **API calls**
    - **Create a new user:**
@@ -52,7 +54,7 @@
     
    - **Get a specific user profile**
         ```sh
-        curl --request GET --url http://localhost:8080/api/users/1 --header 'Authorization token_here' --header 'Content-Type: application/json'
+        curl --request GET --url http://localhost:8080/api/users/1 --header 'Authorization: Bearer token_here' --header 'Content-Type: application/json'
 
    - **Login / get token:**  
      ```sh
@@ -68,12 +70,16 @@
    
    - **Get all posts:**
      ```sh
-     curl --request GET --url 'http://localhost:8080/api/posts/feed?page=0' --header 'Authorization: Bearer token_here' --header 'Content-Type: application/json'
+     curl --request GET --url 'http://localhost:8080/api/posts/feed' --header 'Authorization: Bearer token_here' --header 'Content-Type: application/json'
      
    - **Get a specific post:**
      ```sh
      curl --request GET --url http://localhost:8080/api/posts/1 --header 'Authorization token_here' --header 'Content-Type: application/json'
      
-   - **Get posts that was liked by a specific user:**
+   - **Get posts from a specific user:**
      ```sh
      curl --request GET --url 'http://localhost:8080/api/posts/feed?userId=1' --header 'Authorization: Bearer token_here' --header 'Content-Type: application/json'
+
+   - **Get posts that was liked by a specific user:**
+     ```sh
+     curl --request GET --url 'http://localhost:8080/api/posts/feed?userId=1&liked=true' --header 'Authorization: Bearer token_here' --header 'Content-Type: application/json'
