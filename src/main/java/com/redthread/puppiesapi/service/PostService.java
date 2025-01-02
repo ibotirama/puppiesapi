@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class PostService {
     private final PostRepository postRepository;
     private final LikeRepository likeRepository;
+    private final UserService userService;
 
     public Post createPost(PostDTO postDTO, User user) {
         Post post = new Post();
@@ -58,5 +60,26 @@ public class PostService {
 
     public Optional<Post> getPost(Long postId) {
         return postRepository.findById(postId);
+    }
+
+    public void deletePost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ObjectNotFoundException("Post", postId));
+
+        postRepository.delete(post);
+    }
+
+    @Transactional
+    public void deleteAllPostByUserId(Long userId) {
+        List<Post> posts = postRepository.findAllByUserId(userId);
+        for (Post post : posts) {
+            postRepository.delete(post);
+        }
+    }
+
+    @Transactional
+    public void deleteAllPostsAndLikesByUserId(Long userId) {
+        postRepository.deleteAllLikesByUserId(userId);
+        postRepository.deleteAllPostsByUserId(userId);
     }
 }

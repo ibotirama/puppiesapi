@@ -42,4 +42,13 @@ public class PostController {
         Optional<Post> feed = postService.getPost(postId);
         return feed.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deletePostAllPostsByUserId(@PathVariable Long userId) {
+        postService.deleteAllPostByUserId(userId);
+        // or
+        // postService.deleteAllPostsAndLikesByUserId(userId);
+
+        return ResponseEntity.ok().build();
+    }
 }
